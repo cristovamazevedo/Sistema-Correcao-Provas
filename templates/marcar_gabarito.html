@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marcar Gabarito - Prova</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .prova-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .questoes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .questao-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .questao-numero {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .opcoes {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .opcao {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 20px;
+            font-weight: bold;
+            background: white;
+        }
+
+        .opcao:hover {
+            transform: scale(1.1);
+            background: #e0e7ff;
+        }
+
+        .opcao.selecionada {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .gabarito-final {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 16px;
+            word-break: break-all;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .nav-links {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 8px 16px;
+            border-radius: 25px;
+            background: rgba(255,255,255,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 Marcar Gabarito Oficial</h1>
+            <p>Clique nos círculos para marcar as respostas CORRETAS</p>
+        </div>
+
+        <div class="card">
+            <div class="prova-info">
+                <h3>Prova: <span id="idProva">{{ id_prova }}</span></h3>
+                <div style="margin-top: 10px;">
+                    <label>Quantidade de Questões:</label>
+                    <input type="number" id="qtdQuestoes" min="1" max="60" value="10" style="width: 80px; margin-left: 10px;">
+
+                    <label style="margin-left: 20px;">Valor Total:</label>
+                    <input type="number" id="valorTotal" step="0.5" value="10.0" style="width: 80px; margin-left: 10px;">
+                </div>
+            </div>
+
+            <div id="questoesContainer" class="questoes-grid">
+                <!-- Questões serão geradas aqui -->
+            </div>
+
+            <div class="gabarito-final" id="gabaritoFinal">
+                <strong>Gabarito:</strong> <span id="gabaritoTexto">-</span>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-secondary" onclick="limparTudo()">🗑️ Limpar Tudo</button>
+                <button class="btn btn-primary" onclick="gerarFolha()">📄 Gerar Folha de Respostas</button>
+                <button class="btn btn-success" onclick="salvarGabarito()">💾 Salvar Gabarito</button>
+            </div>
+        </div>
+
+        <div class="nav-links">
+            <a href="/admin">📋 Administração</a>
+            <a href="/">🏠 Início</a>
+        </div>
+    </div>
+
+    <script>
+        let questoes = [];
+        let idProva = '{{ id_prova }}';
+
+        // Inicializar
+        function init() {
+            gerarQuestoes();
+        }
+
+        // Gerar questões
+        function gerarQuestoes() {
+            const qtd = parseInt(document.getElementById('qtdQuestoes').value);
+            const container = document.getElementById('questoesContainer');
+            container.innerHTML = '';
+
+            questoes = [];
+            for (let i = 1; i <= qtd; i++) {
+                questoes.push({
+                    numero: i,
+                    resposta: null
+                });
+
+                const div = document.createElement('div');
+                div.className = 'questao-card';
+                div.innerHTML = `
+                    <div class="questao-numero">Questão ${i}</div>
+                    <div class="opcoes" id="opcoes-${i}">
+                        ${['A', 'B', 'C', 'D', 'E'].map(letra => `
+                            <div class="opcao" onclick="selecionarResposta(${i}, '${letra}')" data-questao="${i}" data-letra="${letra}">
+                                ${letra}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(div);
+            }
+
+            atualizarGabaritoTexto();
+        }
+
+        // Selecionar resposta
+        function selecionarResposta(questaoNum, letra) {
+            const questao = questoes.find(q => q.numero === questaoNum);
+            if (questao) {
+                questao.resposta = letra;
+            }
+
+            // Atualizar visual
+            const opcoesDiv = document.getElementById(`opcoes-${questaoNum}`);
+            if (opcoesDiv) {
+                const opcoes = opcoesDiv.querySelectorAll('.opcao');
+                opcoes.forEach(op => {
+                    const opLetra = op.getAttribute('data-letra');
+                    if (opLetra === letra) {
+                        op.classList.add('selecionada');
+                    } else {
+                        op.classList.remove('selecionada');
+                    }
+                });
+            }
+
+            atualizarGabaritoTexto();
+        }
+
+        // Atualizar texto do gabarito
+        function atualizarGabaritoTexto() {
+            const gabarito = questoes.map(q => q.resposta || '?').join('');
+            document.getElementById('gabaritoTexto').innerHTML = gabarito;
+        }
+
+        // Limpar tudo
+        function limparTudo() {
+            if (confirm('Tem certeza que deseja limpar todas as respostas?')) {
+                questoes.forEach(q => {
+                    q.resposta = null;
+                    const opcoesDiv = document.getElementById(`opcoes-${q.numero}`);
+                    if (opcoesDiv) {
+                        const opcoes = opcoesDiv.querySelectorAll('.opcao');
+                        opcoes.forEach(op => op.classList.remove('selecionada'));
+                    }
+                });
+                atualizarGabaritoTexto();
+            }
+        }
+
+        // Gerar folha
+        async function gerarFolha() {
+            const gabarito = questoes.map(q => q.resposta || '?').join('');
+
+            // Verificar se todas as questões foram respondidas
+            if (gabarito.includes('?')) {
+                alert('Por favor, marque todas as questões antes de gerar a folha!');
+                return;
+            }
+
+            const qtd = parseInt(document.getElementById('qtdQuestoes').value);
+            const valor = parseFloat(document.getElementById('valorTotal').value);
+
+            const loading = document.createElement('div');
+            loading.innerHTML = '<div class="spinner" style="margin: 20px auto;"></div><p>Gerando folha...</p>';
+            loading.style.textAlign = 'center';
+            loading.style.padding = '20px';
+            document.body.appendChild(loading);
+
+            try {
+                const response = await fetch('/gerar_folha', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id_prova: idProva,
+                        qtd_questoes: qtd,
+                        valor_total: valor,
+                        gabarito: gabarito
+                    })
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `folha_${idProva}.png`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                    alert('Folha gerada com sucesso!');
+                } else {
+                    const error = await response.json();
+                    alert('Erro: ' + error.error);
+                }
+
+            } catch (error) {
+                alert('Erro ao gerar folha: ' + error);
+            } finally {
+                loading.remove();
+            }
+        }
+
+        // Salvar gabarito
+        async function salvarGabarito() {
+            const gabarito = questoes.map(q => q.resposta || '?').join('');
+
+            if (gabarito.includes('?')) {
+                alert('Por favor, marque todas as questões antes de salvar!');
+                return;
+            }
+
+            const qtd = parseInt(document.getElementById('qtdQuestoes').value);
+            const valor = parseFloat(document.getElementById('valorTotal').value);
+
+            try {
+                const response = await fetch('/api/salvar_gabarito_visual', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id_prova: idProva,
+                        qtd_questoes: qtd,
+                        valor_total: valor,
+                        gabarito: gabarito
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('✅ Gabarito salvo com sucesso!\n\nAgora você pode:\n1. Gerar a folha para os alunos\n2. Usar a câmera para corrigir');
+                } else {
+                    alert('Erro: ' + data.error);
+                }
+
+            } catch (error) {
+                alert('Erro ao salvar: ' + error);
+            }
+        }
+
+        // Observar mudanças na quantidade de questões
+        document.getElementById('qtdQuestoes').addEventListener('change', () => {
+            gerarQuestoes();
+        });
+
+        // Iniciar
+        init();
+    </script>
+</body>
+</html>
