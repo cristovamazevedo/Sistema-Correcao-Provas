@@ -10,30 +10,21 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
         }
-
         .header {
             text-align: center;
             color: white;
             margin-bottom: 20px;
         }
-
-        .header h1 {
-            font-size: 2em;
-            margin-bottom: 5px;
-        }
-
         .card {
             background: white;
             border-radius: 20px;
@@ -41,45 +32,22 @@
             margin-bottom: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
-
-        .card h2 {
-            margin-bottom: 20px;
-            color: #333;
-            border-left: 4px solid #667eea;
-            padding-left: 15px;
-        }
-
         .form-group {
             margin-bottom: 20px;
         }
-
         label {
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
             color: #555;
         }
-
-        input, textarea, select {
+        input, select {
             width: 100%;
             padding: 12px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-size: 14px;
-            transition: all 0.3s;
         }
-
-        input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
         button, .btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -89,76 +57,45 @@
             font-size: 16px;
             cursor: pointer;
             transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
             margin: 5px;
         }
-
-        button:hover, .btn:hover {
+        button:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
-
-        .btn-secondary {
-            background: #6c757d;
-        }
-
-        .btn-success {
-            background: #28a745;
-        }
-
-        /* Estilo do Gabarito Visual */
         .gabarito-visual {
             margin-top: 30px;
             padding: 20px;
             background: #f8f9fa;
             border-radius: 15px;
             border: 2px solid #e0e0e0;
+            display: none;
         }
-
-        .gabarito-visual h3 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-
         .questoes-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 15px;
-            margin-bottom: 20px;
             max-height: 500px;
             overflow-y: auto;
-            padding: 5px;
+            margin-bottom: 20px;
         }
-
         .questao-card {
             background: white;
             border-radius: 12px;
             padding: 15px;
             border: 1px solid #e0e0e0;
-            transition: all 0.3s;
         }
-
-        .questao-card:hover {
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
         .questao-numero {
             font-weight: bold;
             font-size: 16px;
             margin-bottom: 12px;
             color: #667eea;
-            border-bottom: 1px solid #e0e0e0;
-            padding-bottom: 8px;
         }
-
         .opcoes {
             display: flex;
             gap: 12px;
             justify-content: center;
-            flex-wrap: wrap;
         }
-
         .opcao {
             width: 48px;
             height: 48px;
@@ -168,80 +105,44 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s;
             font-size: 18px;
             font-weight: bold;
             background: white;
             color: #667eea;
         }
-
-        .opcao:hover {
-            transform: scale(1.1);
-            background: #e0e7ff;
-        }
-
         .opcao.selecionada {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border-color: #667eea;
-            transform: scale(1.05);
         }
-
         .gabarito-resumo {
             background: #e8f5e9;
             padding: 15px;
             border-radius: 10px;
-            margin-top: 20px;
-            font-family: monospace;
-            font-size: 16px;
-            word-break: break-all;
             text-align: center;
-        }
-
-        .gabarito-resumo strong {
-            color: #2e7d32;
-        }
-
-        .acoes {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
             margin-top: 20px;
-            flex-wrap: wrap;
         }
-
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
         }
-
         th, td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #e0e0e0;
         }
-
         th {
             background: #f8f9fa;
-            font-weight: bold;
         }
-
-        tr:hover {
-            background: #f5f5f5;
-        }
-
         .btn-small {
             padding: 5px 12px;
             font-size: 12px;
             margin: 2px;
         }
-
         .nav-links {
             text-align: center;
             margin-top: 20px;
         }
-
         .nav-links a {
             color: white;
             text-decoration: none;
@@ -249,497 +150,235 @@
             padding: 8px 16px;
             border-radius: 25px;
             background: rgba(255,255,255,0.2);
-            transition: all 0.3s;
         }
-
-        .nav-links a:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
-        }
-
-        .alert {
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-       /* Melhorias para telas pequenas */
-@media (max-width: 768px) {
-    /* Gabarito visual: opções em uma linha */
-    .opcoes {
-        display: flex;
-        justify-content: center;
-        gap: 8px;
-        flex-wrap: nowrap;
-    }
-    .opcao {
-        width: 38px;
-        height: 38px;
-        font-size: 14px;
-    }
-    .questao-card {
-        padding: 10px;
-    }
-    .questao-numero {
-        font-size: 14px;
-        text-align: center;
-    }
-    .questoes-grid {
-        gap: 8px;
-    }
-    /* Ajustes gerais */
-    .row {
-        grid-template-columns: 1fr;
-    }
-    .btn, button {
-        padding: 10px 20px;
-        font-size: 14px;
-    }
-    table {
-        font-size: 12px;
-    }
-    th, td {
-        padding: 8px;
-    }
-    .card {
-        padding: 15px;
-    }
-    h2 {
-        font-size: 1.2rem;
-    }
-}
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📋 Cadastro de Prova com Gabarito Visual</h1>
-            <p>Preencha os dados e clique nos círculos para marcar as respostas CORRETAS</p>
-        </div>
+<div class="container">
+    <div class="header">
+        <h1>📋 Cadastro de Prova com Gabarito Visual</h1>
+        <p>Preencha os dados e clique nos círculos para marcar as respostas CORRETAS</p>
+    </div>
 
-        <div class="card">
-            <h2>📝 Dados da Prova</h2>
-            <div class="row">
-                <div class="form-group">
-                    <label>ID da Prova *</label>
-                    <input type="text" id="id_prova" placeholder="Ex: PROVA001" value="PROVA001">
-                </div>
-                <div class="form-group">
-                    <label>Valor Total da Prova *</label>
-                    <input type="number" id="valor_total" step="0.5" value="10.0">
-                </div>
-            </div>
-
+    <div class="card">
+        <h2>📝 Dados da Prova</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
             <div class="form-group">
-                <label>Quantidade de Questões *</label>
-                <input type="number" id="qtd_questoes" min="1" max="60" value="10">
+                <label>ID da Prova *</label>
+                <input type="text" id="id_prova" value="PROVA001" placeholder="Ex: PROVA001">
             </div>
-
-            <!-- Gabarito Visual - aparece automaticamente -->
-            <div id="gabaritoVisual" class="gabarito-visual" style="display: none;">
-                <h3>🎯 Marque as Respostas CORRETAS:</h3>
-                <div id="questoesContainer" class="questoes-grid"></div>
-                <div id="gabaritoResumo" class="gabarito-resumo">
-                    <strong>Gabarito:</strong> <span id="gabaritoTexto">-</span>
-                </div>
-                <div class="acoes">
-                    <button class="btn-secondary" onclick="limparTudo()">🗑️ Limpar Tudo</button>
-                    <button class="btn-success" onclick="gerarFolha()">📄 Gerar Folha de Respostas</button>
-                    <button class="btn" onclick="salvarGabarito()">💾 Salvar Gabarito</button>
-                </div>
+            <div class="form-group">
+                <label>Valor Total da Prova *</label>
+                <input type="number" id="valor_total" step="0.5" value="10.0">
             </div>
         </div>
-
-        <!-- Provas já cadastradas -->
-        <div class="card">
-            <h2>📚 Provas Cadastradas</h2>
-            <div style="overflow-x: auto;">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Questões</th>
-                            <th>Valor</th>
-                            <th>Gabarito</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="provasList">
-                        <tr><td colspan="5" style="text-align: center;">Carregando...</td></tr>
-                    </tbody>
-                </table>
-            </div>
+        <div class="form-group">
+            <label>Quantidade de Questões *</label>
+            <input type="number" id="qtd_questoes" min="1" max="60" value="10">
         </div>
 
-        <div class="nav-links">
-            <a href="/">🏠 Início</a>
-            <a href="/baixar_relatorio">📊 Relatório</a>
+        <div id="gabaritoVisual" class="gabarito-visual">
+            <h3>🎯 Marque as Respostas CORRETAS:</h3>
+            <div id="questoesContainer" class="questoes-grid"></div>
+            <div class="gabarito-resumo">
+                <strong>Gabarito:</strong> <span id="gabaritoTexto">-</span>
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button onclick="limparTudo()">🗑️ Limpar Tudo</button>
+                <button onclick="gerarFolha()">📄 Gerar Folha de Respostas</button>
+                <button onclick="salvarGabarito()">💾 Salvar Gabarito</button>
+            </div>
         </div>
     </div>
 
-    <script>
-        let questoes = [];
-        let idProvaAtual = '';
+    <div class="card">
+        <h2>📚 Provas Cadastradas</h2>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr><th>ID</th><th>Questões</th><th>Valor</th><th>Gabarito</th><th>Ações</th></tr>
+                </thead>
+                <tbody id="provasList">
+                    <tr><td colspan="5">Carregando...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-        // Elementos DOM
-        const idProvaInput = document.getElementById('id_prova');
-        const qtdQuestoesInput = document.getElementById('qtd_questoes');
-        const valorTotalInput = document.getElementById('valor_total');
-        const gabaritoVisual = document.getElementById('gabaritoVisual');
+    <div class="nav-links">
+        <a href="/">🏠 Início</a>
+        <a href="/baixar_relatorio">📊 Relatório</a>
+    </div>
+</div>
 
-        // Quando mudar a quantidade de questões, recria o gabarito visual
-        qtdQuestoesInput.addEventListener('change', () => {
-            if (parseInt(qtdQuestoesInput.value) > 0) {
-                gerarQuestoes();
-                gabaritoVisual.style.display = 'block';
+<script>
+    let questoes = [];
+    const idProvaInput = document.getElementById('id_prova');
+    const qtdQuestoesInput = document.getElementById('qtd_questoes');
+    const valorTotalInput = document.getElementById('valor_total');
+    const gabaritoVisual = document.getElementById('gabaritoVisual');
+
+    qtdQuestoesInput.addEventListener('change', () => {
+        if (parseInt(qtdQuestoesInput.value) > 0) {
+            gerarQuestoes();
+            gabaritoVisual.style.display = 'block';
+        }
+    });
+
+    function gerarQuestoes() {
+        const qtd = parseInt(qtdQuestoesInput.value);
+        const container = document.getElementById('questoesContainer');
+        container.innerHTML = '';
+        questoes = [];
+        for (let i = 1; i <= qtd; i++) {
+            questoes.push({ numero: i, resposta: null });
+            const div = document.createElement('div');
+            div.className = 'questao-card';
+            div.innerHTML = `
+                <div class="questao-numero">Questão ${i}</div>
+                <div class="opcoes" id="opcoes-${i}">
+                    ${['A','B','C','D','E'].map(letra => `
+                        <div class="opcao" onclick="selecionarResposta(${i}, '${letra}')" data-questao="${i}" data-letra="${letra}">
+                            ${letra}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            container.appendChild(div);
+        }
+        atualizarGabaritoTexto();
+    }
+
+    function selecionarResposta(questaoNum, letra) {
+        const questao = questoes.find(q => q.numero === questaoNum);
+        if (questao) questao.resposta = letra;
+        const opcoesDiv = document.getElementById(`opcoes-${questaoNum}`);
+        if (opcoesDiv) {
+            opcoesDiv.querySelectorAll('.opcao').forEach(op => {
+                if (op.getAttribute('data-letra') === letra) op.classList.add('selecionada');
+                else op.classList.remove('selecionada');
+            });
+        }
+        atualizarGabaritoTexto();
+    }
+
+    function atualizarGabaritoTexto() {
+        const gabarito = questoes.map(q => q.resposta || '?').join('');
+        document.getElementById('gabaritoTexto').innerHTML = gabarito;
+    }
+
+    function limparTudo() {
+        if (confirm('Tem certeza que deseja limpar todas as respostas?')) {
+            questoes.forEach(q => q.resposta = null);
+            for (let i = 1; i <= questoes.length; i++) {
+                const opcoesDiv = document.getElementById(`opcoes-${i}`);
+                if (opcoesDiv) opcoesDiv.querySelectorAll('.opcao').forEach(op => op.classList.remove('selecionada'));
             }
-        });
-
-        // Quando digitar o ID, atualiza
-        idProvaInput.addEventListener('input', () => {
-            idProvaAtual = idProvaInput.value.trim().toUpperCase();
-            idProvaInput.value = idProvaAtual;
-        });
-
-        // Gerar as questões visualmente
-        function gerarQuestoes() {
-            const qtd = parseInt(qtdQuestoesInput.value);
-            const container = document.getElementById('questoesContainer');
-            container.innerHTML = '';
-
-            questoes = [];
-            for (let i = 1; i <= qtd; i++) {
-                questoes.push({
-                    numero: i,
-                    resposta: null
-                });
-
-                const div = document.createElement('div');
-                div.className = 'questao-card';
-                div.innerHTML = `
-                    <div class="questao-numero">Questão ${i}</div>
-                    <div class="opcoes" id="opcoes-${i}">
-                        ${['A', 'B', 'C', 'D', 'E'].map(letra => `
-                            <div class="opcao" onclick="selecionarResposta(${i}, '${letra}')" data-questao="${i}" data-letra="${letra}">
-                                ${letra}
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-                container.appendChild(div);
-            }
-
             atualizarGabaritoTexto();
         }
+    }
 
-        // Selecionar resposta
-        function selecionarResposta(questaoNum, letra) {
-            const questao = questoes.find(q => q.numero === questaoNum);
-            if (questao) {
-                questao.resposta = letra;
-            }
-
-            // Atualizar visual
-            const opcoesDiv = document.getElementById(`opcoes-${questaoNum}`);
-            if (opcoesDiv) {
-                const opcoes = opcoesDiv.querySelectorAll('.opcao');
-                opcoes.forEach(op => {
-                    const opLetra = op.getAttribute('data-letra');
-                    if (opLetra === letra) {
-                        op.classList.add('selecionada');
-                    } else {
-                        op.classList.remove('selecionada');
-                    }
-                });
-            }
-
-            atualizarGabaritoTexto();
+    async function gerarFolha() {
+        const idProva = idProvaInput.value.trim().toUpperCase();
+        const qtd = parseInt(qtdQuestoesInput.value);
+        const valor = parseFloat(valorTotalInput.value);
+        const gabarito = questoes.map(q => q.resposta || '?').join('');
+        if (!idProva) { alert('Digite o ID da prova'); return; }
+        if (gabarito.includes('?')) { alert('Marque todas as questões'); return; }
+        const response = await fetch('/gerar_folha', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id_prova: idProva, qtd_questoes: qtd, valor_total: valor, gabarito: gabarito })
+        });
+        if (response.ok) {
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `folha_${idProva}.png`;
+            a.click();
+            URL.revokeObjectURL(url);
+            alert('Folha gerada!');
+            carregarProvas();
+        } else {
+            const err = await response.json();
+            alert('Erro: ' + err.error);
         }
+    }
 
-        // Atualizar texto do gabarito
-        function atualizarGabaritoTexto() {
-            const gabarito = questoes.map(q => q.resposta || '?').join('');
-            document.getElementById('gabaritoTexto').innerHTML = gabarito;
-
-            // Mudar cor se incompleto
-            if (gabarito.includes('?')) {
-                document.getElementById('gabaritoResumo').style.background = '#fff3cd';
-            } else {
-                document.getElementById('gabaritoResumo').style.background = '#e8f5e9';
-            }
-        }
-
-        // Limpar tudo
-        function limparTudo() {
-            if (confirm('Tem certeza que deseja limpar todas as respostas?')) {
-                questoes.forEach(q => {
-                    q.resposta = null;
-                    const opcoesDiv = document.getElementById(`opcoes-${q.numero}`);
-                    if (opcoesDiv) {
-                        const opcoes = opcoesDiv.querySelectorAll('.opcao');
-                        opcoes.forEach(op => op.classList.remove('selecionada'));
-                    }
-                });
-                atualizarGabaritoTexto();
-            }
-        }
-
-        // Gerar folha
-        async function gerarFolha() {
-            const idProva = idProvaInput.value.trim().toUpperCase();
-            const qtd = parseInt(qtdQuestoesInput.value);
-            const valor = parseFloat(valorTotalInput.value);
-            const gabarito = questoes.map(q => q.resposta || '?').join('');
-
-            if (!idProva) {
-                alert('Digite o ID da prova!');
-                return;
-            }
-
-            if (gabarito.includes('?')) {
-                alert('Por favor, marque todas as questões antes de gerar a folha!');
-                return;
-            }
-
-            const loading = document.createElement('div');
-            loading.innerHTML = '<div class="spinner"></div><p>Gerando folha...</p>';
-            loading.style.textAlign = 'center';
-            loading.style.padding = '20px';
-            document.body.appendChild(loading);
-
-            try {
-                const response = await fetch('/gerar_folha', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        id_prova: idProva,
-                        qtd_questoes: qtd,
-                        valor_total: valor,
-                        gabarito: gabarito
-                    })
-                });
-
-                if (response.ok) {
-                    const blob = await response.blob();
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `folha_${idProva}.png`;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    window.URL.revokeObjectURL(url);
-
-                    alert('✅ Folha gerada com sucesso!');
-
-                    // Salvar também no banco
-                    await salvarGabaritoSilencioso(idProva, qtd, valor, gabarito);
-
-                    // Recarregar lista de provas
-                    carregarProvas();
-                } else {
-                    const error = await response.json();
-                    alert('Erro: ' + error.error);
-                }
-
-            } catch (error) {
-                alert('Erro ao gerar folha: ' + error);
-            } finally {
-                loading.remove();
-            }
-        }
-
-        // Salvar gabarito silenciosamente
-        async function salvarGabaritoSilencioso(idProva, qtd, valor, gabarito) {
-            try {
-                await fetch('/api/salvar_gabarito_visual', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        id_prova: idProva,
-                        qtd_questoes: qtd,
-                        valor_total: valor,
-                        gabarito: gabarito
-                    })
-                });
-            } catch (error) {
-                console.error('Erro ao salvar:', error);
-            }
-        }
-
-        // Salvar gabarito (botão)
-        async function salvarGabarito() {
-            const idProva = idProvaInput.value.trim().toUpperCase();
-            const qtd = parseInt(qtdQuestoesInput.value);
-            const valor = parseFloat(valorTotalInput.value);
-            const gabarito = questoes.map(q => q.resposta || '?').join('');
-
-            if (!idProva) {
-                alert('Digite o ID da prova!');
-                return;
-            }
-
-            if (gabarito.includes('?')) {
-                alert('Por favor, marque todas as questões antes de salvar!');
-                return;
-            }
-
-            try {
-                const response = await fetch('/api/salvar_gabarito_visual', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        id_prova: idProva,
-                        qtd_questoes: qtd,
-                        valor_total: valor,
-                        gabarito: gabarito
-                    })
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    alert('✅ Gabarito salvo com sucesso!');
-                    carregarProvas();
-                } else {
-                    alert('Erro: ' + data.error);
-                }
-
-            } catch (error) {
-                alert('Erro ao salvar: ' + error);
-            }
-        }
-
-        // Carregar provas existentes
-        async function carregarProvas() {
-            try {
-                const response = await fetch('/listar_provas');
-                const data = await response.json();
-
-                const tbody = document.getElementById('provasList');
-                tbody.innerHTML = '';
-
-                if (data.provas.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhuma prova cadastrada</td></tr>';
-                    return;
-                }
-
-                data.provas.forEach(prova => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td><strong>${prova.id}</strong></td>
-                        <td>${prova.qtd_questoes}</td>
-                        <td>R$ ${prova.valor_total}</td>
-                        <td><code>${prova.gabarito}</code></td>
-                        <td>
-                            <button class="btn-small" onclick="baixarFolha('${prova.id}')">📄 Folha</button>
-                            <button class="btn-small" onclick="baixarGabarito('${prova.id}')">📋 TXT</button>
-                            <button class="btn-small" onclick="carregarProvaParaEdicao('${prova.id}')">✏️ Editar</button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-
-            } catch (error) {
-                console.error('Erro:', error);
-            }
-        }
-
-        // Carregar prova para edição
-       async function carregarProvaParaEdicao(idProva) {
-    try {
-        const response = await fetch(`/api/prova/${idProva}`);
+    async function salvarGabarito() {
+        const idProva = idProvaInput.value.trim().toUpperCase();
+        const qtd = parseInt(qtdQuestoesInput.value);
+        const valor = parseFloat(valorTotalInput.value);
+        const gabarito = questoes.map(q => q.resposta || '?').join('');
+        if (!idProva) { alert('Digite o ID da prova'); return; }
+        if (gabarito.includes('?')) { alert('Marque todas as questões'); return; }
+        const response = await fetch('/api/salvar_gabarito_visual', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id_prova: idProva, qtd_questoes: qtd, valor_total: valor, gabarito: gabarito })
+        });
         const data = await response.json();
-        if (data.error) {
-            alert(data.error);
-            return;
-        }
+        if (data.success) alert('Gabarito salvo com sucesso!');
+        else alert('Erro: ' + data.error);
+        carregarProvas();
+    }
 
-        // Preenche os campos do formulário
+    async function carregarProvas() {
+        try {
+            const response = await fetch('/listar_provas');
+            const data = await response.json();
+            const tbody = document.getElementById('provasList');
+            tbody.innerHTML = '';
+            if (data.provas.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5">Nenhuma prova cadastrada</td></tr>';
+                return;
+            }
+            data.provas.forEach(prova => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${prova.id}</strong></td>
+                    <td>${prova.qtd_questoes}</td>
+                    <td>${prova.valor_total}</td>
+                    <td><code>${prova.gabarito}</code></td>
+                    <td>
+                        <button class="btn-small" onclick="baixarFolha('${prova.id}')">📄 Folha</button>
+                        <button class="btn-small" onclick="baixarGabarito('${prova.id}')">📋 TXT</button>
+                        <button class="btn-small" onclick="carregarProvaParaEdicao('${prova.id}')">✏️ Editar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } catch (error) {
+            console.error(error);
+            document.getElementById('provasList').innerHTML = '<tr><td colspan="5">Erro ao carregar</td></tr>';
+        }
+    }
+
+    function baixarFolha(id) { window.open(`/download/folha/${id}`, '_blank'); }
+    function baixarGabarito(id) { window.open(`/baixar_gabarito/${id}`, '_blank'); }
+    async function carregarProvaParaEdicao(id) {
+        const response = await fetch(`/api/prova/${id}`);
+        const data = await response.json();
+        if (data.error) { alert(data.error); return; }
         idProvaInput.value = data.id_prova;
         qtdQuestoesInput.value = data.qtd_questoes;
         valorTotalInput.value = data.valor_total;
-
-        // Recria as questões visualmente
-        gerarQuestoes();  // limpa e recria com a nova quantidade
-        gabaritoVisual.style.display = 'block';
-
-        // Marca as respostas que já estavam salvas
-        const gabarito = data.gabarito;
-        for (let i = 0; i < gabarito.length; i++) {
-            const letra = gabarito[i];
-            if (letra && letra !== '?') {
-                selecionarResposta(i + 1, letra);
-            }
-        }
-
-        // Rola a tela até o gabarito visual
-        gabaritoVisual.scrollIntoView({ behavior: 'smooth' });
-
-    } catch (error) {
-        alert('Erro ao carregar prova: ' + error);
-    }
-}
-
-                if (gabarito) {
-                    idProvaInput.value = idProva;
-                    qtdQuestoesInput.value = gabarito.length;
-                    valorTotalInput.value = 10.0;
-
-                    // Recriar questões
-                    gerarQuestoes();
-                    gabaritoVisual.style.display = 'block';
-
-                    // Preencher as respostas
-                    for (let i = 0; i < gabarito.length; i++) {
-                        const letra = gabarito[i];
-                        if (letra !== '?') {
-                            selecionarResposta(i + 1, letra);
-                        }
-                    }
-
-                    // Scroll para o gabarito visual
-                    gabaritoVisual.scrollIntoView({ behavior: 'smooth' });
-                }
-
-            } catch (error) {
-                alert('Erro ao carregar prova: ' + error);
-            }
-        }
-
-        function baixarFolha(idProva) {
-            window.open(`/download/folha/${idProva}`, '_blank');
-        }
-
-        function baixarGabarito(idProva) {
-            window.open(`/baixar_gabarito/${idProva}`, '_blank');
-        }
-
-        // Inicializar
         gerarQuestoes();
         gabaritoVisual.style.display = 'block';
-        carregarProvas();
-    </script>
+        const gabarito = data.gabarito;
+        for (let i = 0; i < gabarito.length; i++) {
+            if (gabarito[i] !== '?') selecionarResposta(i+1, gabarito[i]);
+        }
+        gabaritoVisual.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Inicialização
+    if (parseInt(qtdQuestoesInput.value) > 0) {
+        gerarQuestoes();
+        gabaritoVisual.style.display = 'block';
+    }
+    carregarProvas();
+</script>
 </body>
 </html>
