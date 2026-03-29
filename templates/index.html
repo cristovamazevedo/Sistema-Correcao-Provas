@@ -38,7 +38,7 @@
             background: #000;
             border-radius: 15px;
             overflow: hidden;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         #video {
             width: 100%;
@@ -60,6 +60,15 @@
             border-radius: 10px;
             box-shadow: 0 0 0 9999px rgba(0,0,0,0.6);
             transition: border-color 0.2s;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        .guide-box.qr-detected {
+            border-color: #00ff00 !important;
+            animation: none;
+        }
+        @keyframes pulse {
+            0%, 100% { border-color: #ff0000; }
+            50% { border-color: #ffaa00; }
         }
         .guide-text {
             position: absolute;
@@ -73,13 +82,15 @@
             font-size: 12px;
             white-space: nowrap;
         }
-        @keyframes pulse {
-            0%, 100% { border-color: #ff0000; }
-            50% { border-color: #ffaa00; }
-        }
-        .guide-box.qr-detected {
-            border-color: #00ff00 !important;
-            animation: none;
+        .qr-status {
+            text-align: center;
+            margin: 10px 0;
+            font-size: 14px;
+            color: white;
+            background: rgba(0,0,0,0.6);
+            padding: 8px;
+            border-radius: 8px;
+            font-weight: bold;
         }
         .controls {
             display: flex;
@@ -230,13 +241,17 @@
 <div class="container">
     <div class="header">
         <h1>📝 Correção de Provas</h1>
-        <p>Posicione a folha no quadrado e aguarde o QR Code ser detectado</p>
+        <p>Enquadre toda a folha, incluindo o QR Code, e aguarde a detecção</p>
     </div>
 
     <div class="main-card">
         <div class="camera-container">
             <video id="video" autoplay playsinline></video>
             <div class="guide-overlay" id="guideOverlay"></div>
+        </div>
+
+        <div id="qrStatus" class="qr-status">
+            🔍 Aguardando QR Code...
         </div>
 
         <div class="controls">
@@ -281,6 +296,7 @@
     const switchCameraBtn = document.getElementById('switchCameraBtn');
     const loading = document.getElementById('loading');
     const resultSection = document.getElementById('resultSection');
+    const qrStatus = document.getElementById('qrStatus');
 
     let stream = null;
     let currentCamera = 'environment';
@@ -313,7 +329,7 @@
         }
     }
 
-    // Desenhar guia de enquadramento
+    // Desenhar guia de enquadramento (cobrindo quase todo o vídeo)
     function drawGuideBox() {
         const overlay = document.getElementById('guideOverlay');
         const videoRect = video.getBoundingClientRect();
@@ -322,11 +338,12 @@
         const relativeTop = videoRect.top - containerRect.top;
         const relativeLeft = videoRect.left - containerRect.left;
 
-        // Área de enquadramento (parte inferior do vídeo)
-        const boxHeight = videoRect.height * 0.45;
-        const boxWidth = videoRect.width * 0.85;
-        const boxTop = relativeTop + (videoRect.height - boxHeight - 20);
-        const boxLeft = relativeLeft + (videoRect.width - boxWidth) / 2;
+        // Margem de 5% em cada borda para garantir que a folha inteira caiba
+        const margin = 0.05;
+        const boxTop = relativeTop + videoRect.height * margin;
+        const boxLeft = relativeLeft + videoRect.width * margin;
+        const boxWidth = videoRect.width * (1 - 2 * margin);
+        const boxHeight = videoRect.height * (1 - 2 * margin);
 
         overlay.innerHTML = `
             <div class="guide-box" style="
@@ -334,17 +351,16 @@
                 left: ${boxLeft}px;
                 width: ${boxWidth}px;
                 height: ${boxHeight}px;
-                animation: pulse 1.5s ease-in-out infinite;
             ">
                 <div class="guide-text">
-                    📍 Enquadre o GABARITO aqui
+                    📍 Enquadre TODA a folha, incluindo o QR Code
                 </div>
             </div>
         `;
     }
 
-    // Detecção contínua de QR Code
-    async function startQRDetection() {
+    // Detecção contínua de QR Code (atualiza a borda e a mensagem)
+    function startQRDetection() {
         if (detectionInterval) clearInterval(detectionInterval);
         detectionInterval = setInterval(async () => {
             if (!video.videoWidth) return;
@@ -359,21 +375,20 @@
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const code = jsQR(imageData.data, canvas.width, canvas.height);
             const guideBox = document.querySelector('.guide-box');
+
             if (code) {
                 if (!qrDetected) {
                     qrDetected = true;
-                    if (guideBox) {
-                        guideBox.classList.add('qr-detected');
-                        guideBox.style.animation = 'none';
-                    }
+                    qrStatus.innerHTML = '✅ QR Code detectado! Pressione "Capturar".';
+                    qrStatus.style.background = 'rgba(0,128,0,0.8)';
+                    if (guideBox) guideBox.classList.add('qr-detected');
                 }
             } else {
                 if (qrDetected) {
                     qrDetected = false;
-                    if (guideBox) {
-                        guideBox.classList.remove('qr-detected');
-                        guideBox.style.animation = 'pulse 1.5s ease-in-out infinite';
-                    }
+                    qrStatus.innerHTML = '🔍 Aponte para o QR Code da folha.';
+                    qrStatus.style.background = 'rgba(0,0,0,0.6)';
+                    if (guideBox) guideBox.classList.remove('qr-detected');
                 }
             }
         }, 500);
