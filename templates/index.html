@@ -4,43 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Sistema de Correção de Provas</title>
+    <script src="https://unpkg.com/jsqr@1.4.0/dist/jsQR.js"></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
-
         .container {
             max-width: 900px;
             margin: 0 auto;
         }
-
         .header {
             text-align: center;
             color: white;
             margin-bottom: 20px;
         }
-
-        .header h1 {
-            font-size: 2em;
-            margin-bottom: 5px;
-        }
-
         .main-card {
             background: white;
             border-radius: 20px;
             padding: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
-
         .camera-container {
             position: relative;
             width: 100%;
@@ -49,14 +40,12 @@
             overflow: hidden;
             margin-bottom: 15px;
         }
-
         #video {
             width: 100%;
             height: auto;
             display: block;
             transform: scaleX(-1);
         }
-
         .guide-overlay {
             position: absolute;
             top: 0;
@@ -65,15 +54,13 @@
             height: 100%;
             pointer-events: none;
         }
-
         .guide-box {
             position: absolute;
-            border: 3px solid #00ff00;
+            border: 3px solid #ff0000;
             border-radius: 10px;
             box-shadow: 0 0 0 9999px rgba(0,0,0,0.6);
-            animation: pulse 1.5s ease-in-out infinite;
+            transition: border-color 0.2s;
         }
-
         .guide-text {
             position: absolute;
             top: -35px;
@@ -86,12 +73,14 @@
             font-size: 12px;
             white-space: nowrap;
         }
-
         @keyframes pulse {
-            0%, 100% { border-color: #00ff00; }
-            50% { border-color: #ffff00; }
+            0%, 100% { border-color: #ff0000; }
+            50% { border-color: #ffaa00; }
         }
-
+        .guide-box.qr-detected {
+            border-color: #00ff00 !important;
+            animation: none;
+        }
         .controls {
             display: flex;
             gap: 10px;
@@ -99,7 +88,6 @@
             margin-bottom: 20px;
             flex-wrap: wrap;
         }
-
         .btn {
             padding: 12px 24px;
             font-size: 16px;
@@ -109,23 +97,19 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
         .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
-
         .btn-secondary {
             background: #6c757d;
             color: white;
         }
-
         .loading {
             display: none;
             text-align: center;
             padding: 20px;
         }
-
         .spinner {
             border: 4px solid #f3f3f3;
             border-top: 4px solid #667eea;
@@ -135,35 +119,24 @@
             animation: spin 1s linear infinite;
             margin: 0 auto 10px;
         }
-
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
         .result-section {
             display: none;
             margin-top: 20px;
             animation: slideIn 0.5s ease-out;
         }
-
         @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
         .result-card {
             background: #f8f9fa;
             border-radius: 15px;
             padding: 20px;
         }
-
         .nota-card {
             text-align: center;
             padding: 20px;
@@ -172,19 +145,16 @@
             color: white;
             margin-bottom: 20px;
         }
-
         .nota-value {
             font-size: 56px;
             font-weight: bold;
         }
-
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
             margin-bottom: 20px;
         }
-
         .stat-box {
             background: white;
             padding: 10px;
@@ -192,19 +162,16 @@
             text-align: center;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-
         .stat-number {
             font-size: 24px;
             font-weight: bold;
             color: #667eea;
         }
-
         .erros-container {
             max-height: 400px;
             overflow-y: auto;
             margin-top: 15px;
         }
-
         .erro-item {
             background: white;
             padding: 10px;
@@ -215,38 +182,31 @@
             align-items: center;
             border-left: 4px solid;
         }
-
         .erro-item.acertou {
             border-left-color: #28a745;
             background: #d4edda;
         }
-
         .erro-item.errou {
             border-left-color: #dc3545;
             background: #f8d7da;
         }
-
         .erro-item.nao_respondeu {
             border-left-color: #ffc107;
             background: #fff3cd;
         }
-
         .preview-image {
             margin-top: 20px;
             text-align: center;
         }
-
         .preview-image img {
             max-width: 100%;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
-
         .nav-links {
             text-align: center;
             margin-top: 20px;
         }
-
         .nav-links a {
             color: white;
             text-decoration: none;
@@ -257,358 +217,261 @@
             transition: all 0.3s;
             display: inline-block;
         }
-
-        .nav-links a:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
-        }
-
         @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-
-            .btn {
-                padding: 10px 20px;
-                font-size: 14px;
-            }
-
-            .nota-value {
-                font-size: 40px;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .guide-text {
-                font-size: 10px;
-                white-space: normal;
-                width: 150px;
-                text-align: center;
-                top: -45px;
-            }
+            body { padding: 10px; }
+            .btn { padding: 10px 20px; font-size: 14px; }
+            .nota-value { font-size: 40px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .guide-text { font-size: 10px; white-space: normal; width: 150px; text-align: center; top: -45px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📝 Correção de Provas</h1>
-            <p>Posicione a folha no quadrado verde e tire a foto</p>
+<div class="container">
+    <div class="header">
+        <h1>📝 Correção de Provas</h1>
+        <p>Posicione a folha no quadrado e aguarde o QR Code ser detectado</p>
+    </div>
+
+    <div class="main-card">
+        <div class="camera-container">
+            <video id="video" autoplay playsinline></video>
+            <div class="guide-overlay" id="guideOverlay"></div>
         </div>
 
-        <div class="main-card">
-            <div class="camera-container">
-                <video id="video" autoplay playsinline></video>
-                <div class="guide-overlay" id="guideOverlay"></div>
-            </div>
+        <div class="controls">
+            <button class="btn btn-primary" id="captureBtn">
+                📸 Capturar e Corrigir
+            </button>
+            <button class="btn btn-secondary" id="switchCameraBtn">
+                🔄 Trocar Câmera
+            </button>
+        </div>
 
-            <div class="controls">
-                <button class="btn btn-primary" id="captureBtn">
-                    📸 Capturar e Corrigir
-                </button>
-                <button class="btn btn-secondary" id="switchCameraBtn">
-                    🔄 Trocar Câmera
-                </button>
-                <button class="btn btn-secondary" id="activateCameraBtn">
-                    📷 Ativar Câmera
-                </button>
-            </div>
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Processando imagem e corrigindo prova...</p>
+            <small>Isso pode levar alguns segundos</small>
+        </div>
 
-            <div class="loading" id="loading">
-                <div class="spinner"></div>
-                <p>Processando imagem e corrigindo prova...</p>
-                <small>Isso pode levar alguns segundos</small>
-            </div>
-
-            <div class="result-section" id="resultSection">
-                <div class="result-card">
-                    <div class="nota-card">
-                        <div class="nota-value" id="notaValue">0.0</div>
-                        <div>pontos</div>
-                    </div>
-
-                    <div class="stats-grid" id="statsGrid"></div>
-
-                    <h3>📋 Detalhamento das Questões</h3>
-                    <div class="erros-container" id="errosContainer"></div>
-
-                    <div class="preview-image" id="previewImage"></div>
+        <div class="result-section" id="resultSection">
+            <div class="result-card">
+                <div class="nota-card">
+                    <div class="nota-value" id="notaValue">0.0</div>
+                    <div>pontos</div>
                 </div>
+                <div class="stats-grid" id="statsGrid"></div>
+                <h3>📋 Detalhamento das Questões</h3>
+                <div class="erros-container" id="errosContainer"></div>
+                <div class="preview-image" id="previewImage"></div>
             </div>
-        </div>
-
-        <div class="nav-links">
-            <a href="/admin">📋 Administração</a>
-            <a href="/baixar_relatorio">📊 Relatório</a>
         </div>
     </div>
 
-    <script>
-        // Elementos
-        const video = document.getElementById('video');
-        const captureBtn = document.getElementById('captureBtn');
-        const switchCameraBtn = document.getElementById('switchCameraBtn');
-        const activateCameraBtn = document.getElementById('activateCameraBtn');
-        const loading = document.getElementById('loading');
-        const resultSection = document.getElementById('resultSection');
+    <div class="nav-links">
+        <a href="/admin">📋 Administração</a>
+        <a href="/baixar_relatorio">📊 Relatório</a>
+    </div>
+</div>
 
-        let stream = null;
-        let currentCamera = 'environment';
+<script>
+    // Elementos
+    const video = document.getElementById('video');
+    const captureBtn = document.getElementById('captureBtn');
+    const switchCameraBtn = document.getElementById('switchCameraBtn');
+    const loading = document.getElementById('loading');
+    const resultSection = document.getElementById('resultSection');
 
-        // Função para iniciar a câmera (tenta automático, mas também pode ser chamada manualmente)
-        async function initCamera() {
-            try {
-                if (stream) {
-                    stream.getTracks().forEach(track => track.stop());
-                }
+    let stream = null;
+    let currentCamera = 'environment';
+    let detectionInterval = null;
+    let qrDetected = false;
 
-                const constraints = {
-                    video: {
-                        facingMode: { exact: currentCamera }
-                    }
-                };
-
-                try {
-                    stream = await navigator.mediaDevices.getUserMedia(constraints);
-                } catch (error) {
-                    const fallbackConstraints = {
-                        video: {
-                            facingMode: currentCamera
-                        }
-                    };
-                    stream = await navigator.mediaDevices.getUserMedia(fallbackConstraints);
-                }
-
-                video.srcObject = stream;
-                await video.play();
-
-                video.addEventListener('loadedmetadata', () => {
-                    drawGuideBox();
-                });
-
-                // Remove mensagem de erro se existir
-                const errorMsg = document.getElementById('cameraErrorMsg');
-                if (errorMsg) errorMsg.remove();
-
-            } catch (error) {
-                console.error('Erro ao acessar câmera:', error);
-                // Mostra mensagem de erro amigável, mas mantém botão manual disponível
-                if (!document.getElementById('cameraErrorMsg')) {
-                    const msg = document.createElement('div');
-                    msg.id = 'cameraErrorMsg';
-                    msg.innerHTML = '⚠️ Não foi possível ativar a câmera automaticamente. Clique no botão "Ativar Câmera" para tentar novamente.';
-                    msg.style.background = '#ffc107';
-                    msg.style.padding = '10px';
-                    msg.style.borderRadius = '8px';
-                    msg.style.margin = '10px';
-                    msg.style.textAlign = 'center';
-                    document.querySelector('.controls').prepend(msg);
-                }
-            }
-        }
-
-        // Desenhar guia de enquadramento
-        function drawGuideBox() {
-            const overlay = document.getElementById('guideOverlay');
-            const videoRect = video.getBoundingClientRect();
-            const containerRect = document.querySelector('.camera-container').getBoundingClientRect();
-
-            const relativeTop = videoRect.top - containerRect.top;
-            const relativeLeft = videoRect.left - containerRect.left;
-
-            // Área de enquadramento (apenas a parte do gabarito)
-            const boxHeight = videoRect.height * 0.45;
-            const boxWidth = videoRect.width * 0.85;
-            const boxTop = relativeTop + (videoRect.height - boxHeight - 20);
-            const boxLeft = relativeLeft + (videoRect.width - boxWidth) / 2;
-
-            overlay.innerHTML = `
-                <div class="guide-box" style="
-                    top: ${boxTop}px;
-                    left: ${boxLeft}px;
-                    width: ${boxWidth}px;
-                    height: ${boxHeight}px;
-                ">
-                    <div class="guide-text">
-                        📍 Enquadre APENAS a área do GABARITO
-                    </div>
-                </div>
-            `;
-        }
-
-        // Capturar e corrigir
-        captureBtn.addEventListener('click', async () => {
-            loading.style.display = 'block';
-            resultSection.classList.remove('show');
-
-            try {
-                // Criar canvas
-                const canvas = document.createElement('canvas');
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                const context = canvas.getContext('2d');
-
-                // Desenhar frame (sem espelhamento)
-                context.save();
-                context.scale(-1, 1);
-                context.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
-                context.restore();
-
-                // Converter para blob
-                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.9));
-
-                // Enviar para o servidor
-                const formData = new FormData();
-                formData.append('foto', blob, 'prova.jpg');
-
-                const response = await fetch('/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const data = await response.json();
-
-                if (data.error) {
-                    alert('Erro: ' + data.error);
-                } else {
-                    // Mostrar nota
-                    document.getElementById('notaValue').innerHTML = `${data.nota} pontos`;
-
-                    // Calcular acertos e total
-                    const erros = data.erros || {};
-                    const totalQuestoes = Object.keys(erros).length;
-                    const acertos = Object.values(erros).filter(e => e.status === 'acertou').length;
-                    const percentual = totalQuestoes > 0 ? ((acertos / totalQuestoes) * 100).toFixed(1) : 0;
-
-                    // Mostrar estatísticas
-                    document.getElementById('statsGrid').innerHTML = `
-                        <div class="stat-box">
-                            <div class="stat-number">${acertos}</div>
-                            <div>Acertos</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-number">${totalQuestoes - acertos}</div>
-                            <div>Erros</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-number">${totalQuestoes}</div>
-                            <div>Total</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-number">${percentual}%</div>
-                            <div>Aproveitamento</div>
-                        </div>
-                    `;
-
-                    // Mostrar erros detalhados
-                    const errosContainer = document.getElementById('errosContainer');
-                    errosContainer.innerHTML = '';
-
-                    if (totalQuestoes > 0) {
-                        Object.entries(erros).forEach(([questao, info]) => {
-                            const statusText = {
-                                'acertou': '✅ Acertou',
-                                'errou': '❌ Errou',
-                                'nao_respondeu': '⚠️ Não respondeu'
-                            }[info.status] || info.status;
-
-                            const detalhes = info.aluno ?
-                                `Sua: ${info.aluno} | Correta: ${info.correta}` :
-                                `Resposta correta: ${info.correta}`;
-
-                            errosContainer.innerHTML += `
-                                <div class="erro-item ${info.status}">
-                                    <div>
-                                        <strong>Questão ${questao}</strong>
-                                        <div><small>${detalhes}</small></div>
-                                    </div>
-                                    <span>${statusText}</span>
-                                </div>
-                            `;
-                        });
-                    } else {
-                        errosContainer.innerHTML = '<p style="text-align:center;">Nenhum erro detectado. Prova correta!</p>';
-                    }
-
-                    // Mostrar imagem marcada
-                    if (data.imagem_marcada) {
-                        document.getElementById('previewImage').innerHTML = `
-                            <h4>🖼️ Imagem Processada:</h4>
-                            <img src="data:image/jpeg;base64,${data.imagem_marcada}" alt="Prova processada">
-                            <p><small>✓ Questões erradas marcadas com X vermelho</small></p>
-                            <p><small>✓ Respostas corretas marcadas com círculo verde</small></p>
-                        `;
-                    }
-
-                    resultSection.classList.add('show');
-                }
-
-            } catch (error) {
-                console.error('Erro:', error);
-                alert('Erro ao processar a imagem. Tente novamente.');
-            } finally {
-                loading.style.display = 'none';
-            }
-        });
-
-        // Trocar câmera
-        switchCameraBtn.addEventListener('click', () => {
-            currentCamera = currentCamera === 'environment' ? 'user' : 'environment';
-            initCamera();
-        });
-
-        // Botão manual para ativar câmera
-        activateCameraBtn.addEventListener('click', () => {
-            initCamera();
-        });
-
-        // Redesenhar guia ao redimensionar
-        window.addEventListener('resize', () => {
-            if (video.videoWidth) {
-                drawGuideBox();
-            }
-        });
-
-        // Iniciar câmera automaticamente ao carregar a página
-        window.addEventListener('load', () => {
-            initCamera();
-        });
-        async function activateCameraManually() {
-        console.log('Tentando ativar câmera manualmente');
+    // Inicializar câmera
+    async function initCamera() {
         try {
             if (stream) {
                 stream.getTracks().forEach(track => track.stop());
             }
             const constraints = {
-                video: { facingMode: currentCamera }
+                video: {
+                    facingMode: currentCamera,
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                }
             };
             stream = await navigator.mediaDevices.getUserMedia(constraints);
             video.srcObject = stream;
             await video.play();
             video.addEventListener('loadedmetadata', () => {
                 drawGuideBox();
+                startQRDetection();
             });
-            // Remove mensagem de erro
-            const errorMsg = document.getElementById('cameraErrorMsg');
-            if (errorMsg) errorMsg.remove();
-            console.log('Câmera ativada com sucesso');
         } catch (error) {
-            console.error('Erro na ativação manual:', error);
-            alert('Não foi possível ativar a câmera. Verifique permissões e se o site está em HTTPS.');
+            console.error('Erro ao acessar câmera:', error);
+            alert('Não foi possível acessar a câmera. Verifique as permissões.');
         }
     }
 
-    // Evento do botão manual
-    activateCameraBtn.addEventListener('click', activateCameraManually);
+    // Desenhar guia de enquadramento
+    function drawGuideBox() {
+        const overlay = document.getElementById('guideOverlay');
+        const videoRect = video.getBoundingClientRect();
+        const containerRect = document.querySelector('.camera-container').getBoundingClientRect();
 
-    // Inicia automático (fallback)
-    window.addEventListener('load', () => {
-        initCamera(); // tenta automático, mas falhará em HTTP; o botão manual resolve
+        const relativeTop = videoRect.top - containerRect.top;
+        const relativeLeft = videoRect.left - containerRect.left;
+
+        // Área de enquadramento (parte inferior do vídeo)
+        const boxHeight = videoRect.height * 0.45;
+        const boxWidth = videoRect.width * 0.85;
+        const boxTop = relativeTop + (videoRect.height - boxHeight - 20);
+        const boxLeft = relativeLeft + (videoRect.width - boxWidth) / 2;
+
+        overlay.innerHTML = `
+            <div class="guide-box" style="
+                top: ${boxTop}px;
+                left: ${boxLeft}px;
+                width: ${boxWidth}px;
+                height: ${boxHeight}px;
+                animation: pulse 1.5s ease-in-out infinite;
+            ">
+                <div class="guide-text">
+                    📍 Enquadre o GABARITO aqui
+                </div>
+            </div>
+        `;
+    }
+
+    // Detecção contínua de QR Code
+    async function startQRDetection() {
+        if (detectionInterval) clearInterval(detectionInterval);
+        detectionInterval = setInterval(async () => {
+            if (!video.videoWidth) return;
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.save();
+            ctx.scale(-1, 1);
+            ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
+            ctx.restore();
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const code = jsQR(imageData.data, canvas.width, canvas.height);
+            const guideBox = document.querySelector('.guide-box');
+            if (code) {
+                if (!qrDetected) {
+                    qrDetected = true;
+                    if (guideBox) {
+                        guideBox.classList.add('qr-detected');
+                        guideBox.style.animation = 'none';
+                    }
+                }
+            } else {
+                if (qrDetected) {
+                    qrDetected = false;
+                    if (guideBox) {
+                        guideBox.classList.remove('qr-detected');
+                        guideBox.style.animation = 'pulse 1.5s ease-in-out infinite';
+                    }
+                }
+            }
+        }, 500);
+    }
+
+    // Capturar e corrigir
+    captureBtn.addEventListener('click', async () => {
+        loading.style.display = 'block';
+        resultSection.classList.remove('show');
+
+        try {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const context = canvas.getContext('2d');
+            context.save();
+            context.scale(-1, 1);
+            context.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
+            context.restore();
+
+            const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.9));
+            const formData = new FormData();
+            formData.append('foto', blob, 'prova.jpg');
+
+            const response = await fetch('/upload', { method: 'POST', body: formData });
+            const data = await response.json();
+
+            if (data.error) {
+                alert('Erro: ' + data.error);
+            } else {
+                document.getElementById('notaValue').innerHTML = `${data.nota} pontos`;
+                const erros = data.erros || {};
+                const totalQuestoes = Object.keys(erros).length;
+                const acertos = Object.values(erros).filter(e => e.status === 'acertou').length;
+                const percentual = totalQuestoes > 0 ? ((acertos / totalQuestoes) * 100).toFixed(1) : 0;
+
+                document.getElementById('statsGrid').innerHTML = `
+                    <div class="stat-box"><div class="stat-number">${acertos}</div><div>Acertos</div></div>
+                    <div class="stat-box"><div class="stat-number">${totalQuestoes - acertos}</div><div>Erros</div></div>
+                    <div class="stat-box"><div class="stat-number">${totalQuestoes}</div><div>Total</div></div>
+                    <div class="stat-box"><div class="stat-number">${percentual}%</div><div>Aproveitamento</div></div>
+                `;
+
+                const errosContainer = document.getElementById('errosContainer');
+                errosContainer.innerHTML = '';
+                if (totalQuestoes > 0) {
+                    Object.entries(erros).forEach(([questao, info]) => {
+                        const statusText = {
+                            'acertou': '✅ Acertou',
+                            'errou': '❌ Errou',
+                            'nao_respondeu': '⚠️ Não respondeu'
+                        }[info.status] || info.status;
+                        const detalhes = info.aluno ?
+                            `Sua: ${info.aluno} | Correta: ${info.correta}` :
+                            `Resposta correta: ${info.correta}`;
+                        errosContainer.innerHTML += `
+                            <div class="erro-item ${info.status}">
+                                <div><strong>Questão ${questao}</strong><br><small>${detalhes}</small></div>
+                                <span>${statusText}</span>
+                            </div>
+                        `;
+                    });
+                } else {
+                    errosContainer.innerHTML = '<p style="text-align:center;">Nenhum erro detectado. Prova correta!</p>';
+                }
+
+                if (data.imagem_marcada) {
+                    document.getElementById('previewImage').innerHTML = `
+                        <h4>🖼️ Imagem Processada:</h4>
+                        <img src="data:image/jpeg;base64,${data.imagem_marcada}" alt="Prova processada">
+                        <p><small>🟡 Círculos amarelos: respostas detectadas</small></p>
+                        <p><small>❌ X vermelho: questões erradas</small></p>
+                        <p><small>🟢 Círculo verde: resposta correta</small></p>
+                    `;
+                }
+                resultSection.classList.add('show');
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+            alert('Erro ao processar a imagem. Tente novamente.');
+        } finally {
+            loading.style.display = 'none';
+        }
     });
 
-    </script>
+    // Trocar câmera
+    switchCameraBtn.addEventListener('click', () => {
+        currentCamera = currentCamera === 'environment' ? 'user' : 'environment';
+        initCamera();
+    });
 
+    // Redesenhar guia ao redimensionar
+    window.addEventListener('resize', () => {
+        if (video.videoWidth) drawGuideBox();
+    });
+
+    // Iniciar
+    initCamera();
+</script>
 </body>
 </html>
