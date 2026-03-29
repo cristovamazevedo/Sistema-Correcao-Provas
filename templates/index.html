@@ -6,26 +6,15 @@
     <title>Sistema de Correção de Provas</title>
     <script src="https://unpkg.com/jsqr@1.4.0/dist/jsQR.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 20px;
-        }
+        .container { max-width: 900px; margin: 0 auto; }
+        .header { text-align: center; color: white; margin-bottom: 20px; }
         .main-card {
             background: white;
             border-radius: 20px;
@@ -156,10 +145,7 @@
             color: white;
             margin-bottom: 20px;
         }
-        .nota-value {
-            font-size: 56px;
-            font-weight: bold;
-        }
+        .nota-value { font-size: 56px; font-weight: bold; }
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -173,11 +159,7 @@
             text-align: center;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .stat-number {
-            font-size: 24px;
-            font-weight: bold;
-            color: #667eea;
-        }
+        .stat-number { font-size: 24px; font-weight: bold; color: #667eea; }
         .erros-container {
             max-height: 400px;
             overflow-y: auto;
@@ -193,31 +175,16 @@
             align-items: center;
             border-left: 4px solid;
         }
-        .erro-item.acertou {
-            border-left-color: #28a745;
-            background: #d4edda;
-        }
-        .erro-item.errou {
-            border-left-color: #dc3545;
-            background: #f8d7da;
-        }
-        .erro-item.nao_respondeu {
-            border-left-color: #ffc107;
-            background: #fff3cd;
-        }
-        .preview-image {
-            margin-top: 20px;
-            text-align: center;
-        }
+        .erro-item.acertou { border-left-color: #28a745; background: #d4edda; }
+        .erro-item.errou { border-left-color: #dc3545; background: #f8d7da; }
+        .erro-item.nao_respondeu { border-left-color: #ffc107; background: #fff3cd; }
+        .preview-image { margin-top: 20px; text-align: center; }
         .preview-image img {
             max-width: 100%;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
-        .nav-links {
-            text-align: center;
-            margin-top: 20px;
-        }
+        .nav-links { text-align: center; margin-top: 20px; }
         .nav-links a {
             color: white;
             text-decoration: none;
@@ -359,7 +326,7 @@
         `;
     }
 
-    // Detecção contínua de QR Code (atualiza a borda e a mensagem)
+    // Detecção contínua de QR Code
     function startQRDetection() {
         if (detectionInterval) clearInterval(detectionInterval);
         detectionInterval = setInterval(async () => {
@@ -368,6 +335,7 @@
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             const ctx = canvas.getContext('2d');
+            // Não aplicar espelhamento aqui, porque queremos a imagem real para leitura do QR
             ctx.save();
             ctx.scale(-1, 1);
             ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
@@ -394,20 +362,60 @@
         }, 500);
     }
 
-    // Capturar e corrigir
+    // Função para obter a orientação correta do dispositivo
+    function getOrientation() {
+        if (screen.orientation) {
+            return screen.orientation.angle;
+        } else if (window.orientation !== undefined) {
+            return window.orientation;
+        }
+        return 0;
+    }
+
+    // Capturar e corrigir com correção de rotação
     captureBtn.addEventListener('click', async () => {
         loading.style.display = 'block';
         resultSection.classList.remove('show');
 
         try {
             const canvas = document.createElement('canvas');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            const context = canvas.getContext('2d');
-            context.save();
-            context.scale(-1, 1);
-            context.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
-            context.restore();
+            const videoWidth = video.videoWidth;
+            const videoHeight = video.videoHeight;
+            canvas.width = videoWidth;
+            canvas.height = videoHeight;
+            const ctx = canvas.getContext('2d');
+
+            // Desenhar com espelhamento e depois corrigir rotação
+            ctx.save();
+            ctx.scale(-1, 1);
+            ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
+            ctx.restore();
+
+            // Obter orientação e corrigir rotação (se necessário)
+            const orientation = getOrientation();
+            if (orientation === 90 || orientation === -90) {
+                // Se a orientação for 90 ou -90, a imagem está de lado; rotacionamos
+                const rotatedCanvas = document.createElement('canvas');
+                rotatedCanvas.width = videoHeight;
+                rotatedCanvas.height = videoWidth;
+                const rotCtx = rotatedCanvas.getContext('2d');
+                if (orientation === 90) {
+                    rotCtx.translate(videoHeight, 0);
+                    rotCtx.rotate(Math.PI / 2);
+                } else if (orientation === -90) {
+                    rotCtx.translate(0, videoWidth);
+                    rotCtx.rotate(-Math.PI / 2);
+                }
+                rotCtx.drawImage(canvas, 0, 0);
+                canvas.width = rotatedCanvas.width;
+                canvas.height = rotatedCanvas.height;
+                ctx.drawImage(rotatedCanvas, 0, 0);
+            } else if (orientation === 180) {
+                // Imagem de cabeça para baixo
+                ctx.translate(videoWidth, videoHeight);
+                ctx.rotate(Math.PI);
+                ctx.drawImage(canvas, 0, 0);
+            }
 
             const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.9));
             const formData = new FormData();
